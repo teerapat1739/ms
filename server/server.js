@@ -6,6 +6,7 @@ const app = express();
 const port = 8000;
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
+const { default: axios } = require("axios");
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -104,7 +105,9 @@ let events = [
     time: "12:00"
   }
 ];
-
+const base_url = {
+  party_service: "http://localhost:7777"
+}
 // get all events
 app.get("/events", (req, res) => {
   res.send(events);
@@ -119,6 +122,19 @@ app.get("/events/:id", checkJwt, (req, res) => {
 app.get("/", (req, res) => {
   res.send(`Hi! Server is listening on port ${port}`);
 });
+app.get("/api-party/*", async (req, res) => {
+  console.log('dasdas', `${base_url.party_service}${req.url}`)
+  try {
+    let {data} = await axios.get(`${base_url.party_service}${req.url}`)
+    console.log(data)
+    res.send(data);
+  } catch (error) {
+    res.send(error);
+  }
+
+});
 
 // listen on the port
 app.listen(port);
+
+

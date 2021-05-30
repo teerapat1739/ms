@@ -12,6 +12,7 @@ import (
 	"github.com/subosito/gotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	partyrepo "party-service/business/party/repository"
 	partysrc "party-service/business/party/service"
@@ -23,8 +24,11 @@ func init() {
 }
 
 func main() {
+
 	conString := os.Getenv("MYSQL_CONN")
-	dbCon, err := gorm.Open(mysql.Open(conString), &gorm.Config{})
+	dbCon, err := gorm.Open(mysql.Open(conString), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +39,7 @@ func main() {
 	e.Use(middleware.GzipWithConfig(middleware.GzipConfig{
 		Level: 6,
 	}))
-
+	// api-party
 	e.GET("/healthz", func(c echo.Context) error {
 		return c.String(http.StatusOK, "OK")
 	})

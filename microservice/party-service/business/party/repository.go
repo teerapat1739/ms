@@ -10,4 +10,7 @@ type Repository interface {
 	Update(kudo model.Party) error
 	Create(party model.Party) error
 	JoinParty(m model.Member) error
+	GetParty() ([]model.Party, error)
+	CountMemberByPartyID(partyID int) (int64, error)
+	GetPartyByID(partyID int) (model.Party, error)
 }

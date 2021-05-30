@@ -1,5 +1,6 @@
 <template>
   <div class="container is-max-widescreen">
+    <p v-if="$auth.isAuthenticated" class="">Welcome, {{ $auth.user }}!</p>
     <div class="field">
       <label class="label">ชื่อปาร์ตี้</label>
       <div class="control">
