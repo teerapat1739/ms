@@ -9,4 +9,5 @@ type Repository interface {
 	Delete(kudo model.Party) error
 	Update(kudo model.Party) error
 	Create(party model.Party) error
+	JoinParty(m model.Member) error
 }

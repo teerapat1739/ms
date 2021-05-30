@@ -31,13 +31,8 @@ func (s *partyService) CreateParty(party model.Party) (model.Party, error) {
 	return p, nil
 }
 
-func (s *partyService) UpdateKudoWith(githubRepo model.Party) (model.Party, error) {
-	kudo := s.githubRepoToKudo(githubRepo)
-	err := s.repo.Create(kudo)
-	if err != nil {
-		return kudo, err
-	}
-	return kudo, nil
+func (s *partyService) JoinParty(m model.Member) error {
+	return s.repo.JoinParty(m)
 }
 
 func (s *partyService) RemoveKudo(githubRepo model.Party) (model.Party, error) {

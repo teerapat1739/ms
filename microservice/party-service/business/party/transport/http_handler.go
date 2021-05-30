@@ -24,8 +24,8 @@ func NewPartyHTTPHandler(e *echo.Echo, partySerivce party.Service) {
 	api.Use(middleware.Logger())
 
 	// Added authentication
-	api.GET("/party/:id", handler.FindByID)
 	api.POST("/party", handler.CreateParty)
+	api.POST("/joinParty", handler.JoinParty)
 }
 
 func (h *PartyHTTPHandler) CreateParty(c echo.Context) error {
@@ -40,12 +40,16 @@ func (h *PartyHTTPHandler) CreateParty(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, "success")
 }
-func (h *PartyHTTPHandler) FindByID(c echo.Context) error {
-	// id := c.Param("id")
 
-	// res, err := h.partySerivce.FindByID(id)
-	// if err != nil {
-	// 	return c.JSON(http.StatusInternalServerError, "err")
-	// }
-	return c.JSON(http.StatusOK, "res")
+func (h *PartyHTTPHandler) JoinParty(c echo.Context) error {
+	var m model.Member
+	if err := c.Bind(&m); err != nil {
+		log.Println("JoinParty", err)
+		return c.JSON(http.StatusBadRequest, "err")
+	}
+	err := h.partySerivce.JoinParty(m)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "err")
+	}
+	return c.JSON(http.StatusOK, "success")
 }

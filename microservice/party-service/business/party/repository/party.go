@@ -69,6 +69,15 @@ func (r *partyRepository) Create(p model.Party) error {
 	return nil
 }
 
+// Create kudos in the database.
+func (r *partyRepository) JoinParty(m model.Member) error {
+	result := r.db.Table("MEMBERS").Create(&m)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
 // Count counts documents for a given collection
 func (r *partyRepository) Count() (int, error) {
 	session := r.session.Copy()
