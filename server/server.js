@@ -11,11 +11,14 @@ const { default: axios } = require("axios");
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+require('dotenv').config()
+
 
 // Set up Auth0 configuration
 const authConfig = {
   domain: "dev-bzic0sop.auth0.com",
-  audience: "https://vue-express-api.com"
+  audience: "https://vue-express-api.com",
+  secret: "vBFpjeHQiy6pKSMKx_CVboYlb_8V6lw9Y3OSGRhM9ugeSPYpXhfmL6X3yDxJAQqt"
 };
 
 // Create middleware to validate the JWT using express-jwt
@@ -106,7 +109,9 @@ let events = [
   }
 ];
 const base_url = {
-  party_service: "http://localhost:7777"
+  party_service: process.env.API_PARTY_SERVICE_URL || "http://localhost:7777",
+  // party_service: "https://dbe34a7a6452.ngrok.io",
+  payment_service: process.env.API_PAYMENT_SERVICE_URL || "http://localhost:9999"
 }
 // get all events
 app.get("/events", (req, res) => {
@@ -122,19 +127,69 @@ app.get("/events/:id", checkJwt, (req, res) => {
 app.get("/", (req, res) => {
   res.send(`Hi! Server is listening on port ${port}`);
 });
-app.get("/api-party/*", async (req, res) => {
-  console.log('dasdas', `${base_url.party_service}${req.url}`)
+
+app.get("/public/api-party/*", async (req, res) => {
   try {
     let {data} = await axios.get(`${base_url.party_service}${req.url}`)
-    console.log(data)
     res.send(data);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+
+app.post("/public/api-party/*", async (req, res) => {
+  try {
+    let res = await axios({
+      method: 'post',
+      url: `${base_url.party_service}${req.url}`,
+      data: req.body
+    });
+    res.send(res);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+
+app.get("/private/api-party/*", checkJwt, async (req, res) => {
+  try {
+    let {data} = await axios.get(`${base_url.party_service}${req.url}`)
+    res.send(data);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+app.post("/private/api-party/*", checkJwt, async (req, res) => {
+  try {
+    let res = await axios({
+      method: 'post',
+      url: `${base_url.party_service}${req.url}`,
+      data: req.body
+    });
+    res.send(res);
+  } catch (error) {
+    res.send(error);
+  }
+});
+
+app.post("/private/api-payment/*", checkJwt, async (req, res) => {
+  console.log(`${base_url.payment_service}${req.url}`)
+  try {
+    let res = await axios({
+      method: 'post',
+      url: `${base_url.payment_service}${req.url}`,
+      data: req.body
+    });
+    res.send(res);
   } catch (error) {
     res.send(error);
   }
 
 });
 
+
 // listen on the port
 app.listen(port);
-
 

@@ -2,12 +2,20 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import './../node_modules/bulma/css/bulma.css';
+require('dotenv').config()
 
 // Import the Auth0 configuration
 import { domain, clientId, audience } from "../auth_config.json";
 
 // Import the plugin here
 import { Auth0Plugin } from "./auth";
+
+import VueModalTor from "vue-modaltor/dist/vue-modaltor.common";
+import "vue-modaltor/dist/vue-modaltor.css";
+
+Vue.use(VueModalTor, {
+    bgPanel: "antiquewhite"  // add custome options
+});
 
 // Install the authentication plugin here
 Vue.use(Auth0Plugin, {

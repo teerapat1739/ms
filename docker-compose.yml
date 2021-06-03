@@ -1,0 +1,69 @@
+version: '3'
+
+services:
+  database:
+    image: mysql:5.7
+    command: --max_allowed_packet=1000M
+    volumes:
+      - ./db/mysql/volume:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - "3306:3306"
+  redis:
+    image: "redis:alpine"
+    hostname: redis
+    ports:
+      - "6379:6379"
+  party-haan-front:
+    build: './client'
+    restart: on-failure
+    ports: 
+      - 8080:8080
+    environment:
+        - API_GATEWAY_URL=api-gateway-partyhaan
+        - WS_SOCKET_NOTI_URL=noti-service:5555
+    volumes:
+        - ./client/file:/usr/src/app/file
+  api-gateway-partyhaan:
+    build: './server'
+    restart: on-failure
+    ports: 
+      - 8000:8000
+    environment:
+      - API_PARTY_SERVICE_URL=http://party-service:7777
+      - API_PAYMENT_SERVICE_URL=http://payment-service:9999
+    volumes:
+        - ./server/file:/usr/src/app/file
+  noti-service:
+    build: './microservice/noti-service'
+    restart: on-failure
+    ports: 
+      - 5555:5555
+    environment: 
+      REDIS_SERVER: 'redis://redis:6379'
+    volumes:
+        - ./noti-service/file:/usr/src/app/file
+  party-service:
+    build: './microservice/party-service'
+    restart: on-failure
+    ports: 
+      - 7777:7777
+    environment: 
+        MYSQL_CONN: 'MYSQL_CONN=root:root@tcp(database:3306)/PARTY?parseTime=true'
+    volumes:
+        - ./party-service/file:/usr/src/app/file
+  payment-service:
+    build: './microservice/payment-service'
+    restart: on-failure
+    depends_on:
+      - redis
+    ports: 
+      - 9999:9999
+    environment: 
+      REDIS_SERVER: 'redis:6379'
+    volumes:
+        - ./payment-service/file:/usr/src/app/file
+
+

@@ -1,0 +1,5 @@
+db/
+.env
+noti-service.exe
+tmp
+/node_modules

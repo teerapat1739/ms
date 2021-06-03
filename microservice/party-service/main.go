@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -26,6 +27,11 @@ func init() {
 func main() {
 
 	conString := os.Getenv("MYSQL_CONN")
+	conString = ""
+	if len(conString) == 0 {
+		conString = "root:root@tcp(database:3306)/PARTY?parseTime=true"
+	}
+	fmt.Println("conString", conString)
 	dbCon, err := gorm.Open(mysql.Open(conString), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})

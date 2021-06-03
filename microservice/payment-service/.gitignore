@@ -1,0 +1,4 @@
+db/
+.env
+payment-service.exe
+tmp

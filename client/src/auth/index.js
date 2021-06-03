@@ -39,7 +39,7 @@ export const useAuth0 = ({
           await this.auth0Client.loginWithPopup(o);
         } catch (e) {
           // eslint-disable-next-line
-          console.error(e);
+          throw(e)
         } finally {
           this.popupOpen = false;
         }

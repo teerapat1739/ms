@@ -70,7 +70,6 @@ func (r *partyRepository) Create(p model.Party) error {
 	return nil
 }
 
-// Create kudos in the database.
 func (r *partyRepository) JoinParty(m model.Member) error {
 	result := r.db.Table("MEMBERS").Create(&m)
 	if result.Error != nil {

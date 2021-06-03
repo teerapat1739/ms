@@ -1,24 +1,24 @@
 <template>
   <div class="container is-max-widescreen">
-    <p v-if="$auth.isAuthenticated" class="">Welcome, {{ $auth.user }}!</p>
+    <p v-if="$auth.isAuthenticated" class="">Welcome, {{ $auth.user.email }}!</p>
     <div class="field">
       <label class="label">ชื่อปาร์ตี้</label>
       <div class="control">
-        <input class="input" type="text" placeholder="" />
+        <input class="input" type="text" v-model="partyName" placeholder="" />
       </div>
     </div>
 
     <div class="field">
       <label class="label">จำนวนคนที่ขาด</label>
       <div class="control">
-        <input class="input" type="number" placeholder="" />
+        <input class="input" v-model="members" type="number" placeholder="" />
       </div>
     </div>
 
 
     <div class="field is-grouped">
       <div class="control">
-        <button class="button is-link">Submit</button>
+        <button @click="addEventData()" class="button is-link">Submit</button>
       </div>
       <div class="control">
         <button class="button is-link is-light">Cancel</button>
@@ -35,23 +35,25 @@ export default {
     // initialize the event object
     return {
       event: {},
+      partyName: '',
+      members: 0
     };
   },
-  created() {
-    // this.getEventData();
-  },
   methods: {
-    async getEventData() {
-      // Get the access token from the auth wrapper
-      const accessToken = await this.$auth.getTokenSilently();
-
-      // Use the eventService to call the getEventSingle method
-      EventService.getEventSingle(this.$route.params.id, accessToken).then(
-        ((event) => {
-          this.$set(this, "event", event);
-        }).bind(this)
-      );
+    async addEventData() {
+       let obj = {
+        name: this.partyName,
+        size: parseInt(this.members)
+      }
+       const accessToken = await this.$auth.getTokenSilently();
+       
+       try {
+         await EventService.addParty(obj, accessToken)
+       } catch (error) {
+         throw(error)
+       }
     },
+
   },
 };
 </script>

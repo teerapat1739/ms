@@ -29,6 +29,14 @@ func (s *partyService) GetParty() ([]model.Party, error) {
 	}
 	return res, nil
 }
+func (s *partyService) GetPartyByID(id int) (model.Party, error) {
+	res, err := s.repo.GetPartyByID(id)
+	if err != nil {
+		return res, err
+	}
+	res.FillDefaultParty()
+	return res, nil
+}
 
 func (s *partyService) CreateParty(party model.Party) (model.Party, error) {
 	var p model.Party
@@ -41,6 +49,7 @@ func (s *partyService) CreateParty(party model.Party) (model.Party, error) {
 
 func (s *partyService) JoinParty(m model.Member) error {
 	if err := s.isAvailiableToJoin(m.PartyID); err != nil {
+
 		return err
 	}
 
@@ -69,7 +78,7 @@ func (s *partyService) isAvailiableToJoin(partyId int) error {
 	if err != nil {
 		return err
 	}
-	if int(count) < res.Size {
+	if int(count) <= res.Size {
 		return nil
 	}
 	return errors.New("ปาร์ตี้นี้เต็มแล้ว")
