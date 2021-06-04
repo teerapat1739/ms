@@ -1,6 +1,8 @@
 <template>
   <div class="container is-max-widescreen">
-    <p v-if="$auth.isAuthenticated" class="">Welcome, {{ $auth.user.email }}!</p>
+    <p v-if="$auth.isAuthenticated" class="">
+      Welcome, {{ $auth.user.email }}!
+    </p>
     <div class="field">
       <label class="label">ชื่อปาร์ตี้</label>
       <div class="control">
@@ -14,7 +16,6 @@
         <input class="input" v-model="members" type="number" placeholder="" />
       </div>
     </div>
-
 
     <div class="field is-grouped">
       <div class="control">
@@ -35,25 +36,30 @@ export default {
     // initialize the event object
     return {
       event: {},
-      partyName: '',
-      members: 0
+      partyName: "",
+      members: 0,
     };
   },
   methods: {
     async addEventData() {
-       let obj = {
+      let obj = {
         name: this.partyName,
-        size: parseInt(this.members)
-      }
-       const accessToken = await this.$auth.getTokenSilently();
-       
-       try {
-         await EventService.addParty(obj, accessToken)
-       } catch (error) {
-         throw(error)
-       }
-    },
+        size: parseInt(this.members),
+      };
+      const accessToken = await this.$auth.getTokenSilently();
 
+      try {
+        await EventService.addParty(obj, accessToken);
+        this.$router.push({ path: "/" });
+      } catch (error) {
+        throw error;
+      }
+    },
   },
 };
 </script>
+<style scoped>
+.container {
+  padding: 0 20px;
+}
+</style>

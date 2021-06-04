@@ -1,7 +1,7 @@
 <template>
   <div class="events container">
     <div class="header-party">
-    <h2 class="subtitle is-3">ปาร์ตี้ทั้งหมด</h2>
+    <h2 class="subtitle is-3 all-party">ปาร์ตี้ทั้งหมด</h2>
     <router-link to="/addParty">
     <button class="subtitle is-6 btn-add-party">เพิ่มปาร์ตี้ใหม่</button>
     </router-link>
@@ -51,8 +51,8 @@ export default {
   margin-top: 100px;
   text-align: center;
 }
-.btn-add-party{
-      background-color: #48c78e;
+.btn-add-party {
+    background-color: #48c78e;
     border-color: transparent;
     color: #fff;
     cursor: pointer;
@@ -74,4 +74,14 @@ export default {
     justify-content: space-between;
     margin-bottom: 10px;
 }
+.container {
+    padding: 0 30px;
+}
+
+@media only screen and (max-width: 480px) {
+  .all-party {
+    font-size: 1rem !important;
+  }
+}
+
 </style>

@@ -37,6 +37,11 @@ export default {
   min-height: 100px;
   height: 620px;
 }
+@media only screen and (max-width: 480px) {
+  .hero {
+    height: 200px;
+  }
+}
 .hero-body .title {
   text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.6);
   padding: 40px 0 20px 0;

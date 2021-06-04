@@ -136,6 +136,11 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+@media only screen and (max-width: 480px) {
+  .cont {
+    display: block;
+  }
+}
 .btn-join {
   margin-right: 40px;
 }
@@ -163,5 +168,8 @@ export default {
 }
 .scb {
   width: 100px;
+}
+.container{
+  padding: 0 20px;
 }
 </style>
